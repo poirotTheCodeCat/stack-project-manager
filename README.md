@@ -66,3 +66,10 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### Database Setup
+
+This program uses MongoDB
+
+To set up the database you must connect it to your own MongoDB server using the server's URI - it is recommended that you put
+this URI in a .env file using the names used in the code. The code used within the server code uses environment variables to protect sensitive information

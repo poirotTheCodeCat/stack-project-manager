@@ -8,6 +8,8 @@ const port = process.env.PORT || 5000; // initialize the port that the server wi
 
 server.use(bodyParser.json()); // set up bodyparser middleware to parse incoming strings for json data
 
+// set up database
+
 // initialize routes
 const users = require("./routes/api/users");
 server.use("/api/users", users); // set the users api route on the server
