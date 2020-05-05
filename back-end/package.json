@@ -4,7 +4,11 @@
   "description": "API which is called from the stack front end ",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client-install": "cd ../front-end && npm install",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "cd ../front-end && npm start",
+    "dev": "concurrently \"npm run server \" \" npm run client \" "
   },
   "author": "Daniel Grew",
   "license": "ISC",
