@@ -9,6 +9,13 @@ const port = process.env.PORT || 5000; // initialize the port that the server wi
 server.use(bodyParser.json()); // set up bodyparser middleware to parse incoming strings for json data
 
 // set up database
+const db = process.env.MONGO_URI;
+
+// connect to mongoose
+mongoose
+  .connect(db)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(() => console.log(err));
 
 // initialize routes
 const users = require("./routes/api/users");
