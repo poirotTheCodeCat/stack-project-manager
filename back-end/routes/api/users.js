@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
+const User = require("../../models/User");
 
 // route - GET /api/users
 // description - Retrieves user information
@@ -35,14 +36,15 @@ router.post("/", (req, res) => {
       firstName,
       lastName,
       email,
-      passHash,
+      password,
     });
 
     // Salt and hash the password
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.passHash, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.passHash = hash;
+      if (err) return res.status(400).json({ msg: "Error creating user" }); // check for error creating salt
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) return res.status(400).json({ msg: "Error creating user" }); // check for error in generating hash
+        newUser.password = hash;
         newUser.save().then((user) => {
           res.json({
             user: {
