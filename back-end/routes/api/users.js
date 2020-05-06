@@ -7,10 +7,40 @@ const User = require("../../models/User");
 // description - Retrieves user information
 // access TBD
 router.get("/", (req, res) => {
-  res.json({
-    firstName: "Sherlock",
-    lastName: "Holmes",
-    email: "pipedetective@mystery.com",
+  // load recieved credentials into local variables
+  const { email, password } = req.body;
+
+  // check that credentials were recieved
+  if (!email || !password) {
+    return res.json({ msg: "Login redentials missing" });
+  }
+  // check if the User email exists in the database
+  User.findOne({ email }).then((user) => {
+    if (!user) {
+      return res.json({ msg: "No user exists with this email" });
+    }
+    try {
+      // check the user password
+      bcrypt.compare(password, user.password, (err, check) => {
+        if (err) {
+          throw err;
+        }
+        // check if the password is correct
+        if (!check) {
+          return res
+            .status(400)
+            .json({ msg: "Incorrect Username or password" });
+        }
+        // send back user credentials
+        res.status(200).json({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        });
+      });
+    } catch (err) {
+      res.status(400).send(err);
+    }
   });
 });
 
@@ -39,23 +69,30 @@ router.post("/", (req, res) => {
       password,
     });
 
-    // Salt and hash the password
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) return res.status(400).json({ msg: "Error creating user" }); // check for error creating salt
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) return res.status(400).json({ msg: "Error creating user" }); // check for error in generating hash
-        newUser.password = hash;
-        newUser.save().then((user) => {
-          res.json({
-            user: {
-              firstName: firstName,
-              lastName: lastName,
-              email: email,
-            },
-          });
+    try {
+      // Salt and hash the password
+      bcrypt.genSalt(10, (err, salt) => {
+        if (err) throw err;
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser
+            .save()
+            .then((user) => {
+              res.json({
+                user: {
+                  firstName: firstName,
+                  lastName: lastName,
+                  email: email,
+                },
+              });
+            })
+            .catch(() => res.status(400).send(err));
         });
       });
-    });
+    } catch (err) {
+      res.status(400).send(err);
+    }
   });
 });
 
