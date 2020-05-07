@@ -2,11 +2,12 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../../models/User");
+const { registerValidation, loginValidation } = require("../../validation");
 
 // route - GET /api/users
 // description - Retrieves user information
 // access TBD
-router.get("/", (req, res) => {
+router.get("/login", (req, res) => {
   // load recieved credentials into local variables
   const { email, password } = req.body;
 
@@ -47,13 +48,11 @@ router.get("/", (req, res) => {
 // route - POST /api/users
 // description - Store a new user in the database
 // access - Public
-router.post("/", (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+router.post("/register", (req, res) => {
+  const { error } = registerValidation(req.body); // validate user details
+  if (error) return res.status(400).send(error.details[0].message);
 
-  // Simple validation
-  if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ msg: "Credentials are missing" });
-  }
+  const { firstName, lastName, email, password } = req.body; // load the contents of the request body
 
   // Check for existing user
   User.findOne({ email }).then((user) => {
