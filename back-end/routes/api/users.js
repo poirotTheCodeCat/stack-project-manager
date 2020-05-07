@@ -12,37 +12,30 @@ router.get("/login", async (req, res) => {
   const { email, password } = req.body;
 
   // check that credentials were recieved
-  if (!email || !password) {
-    return res.json({ msg: "Login redentials missing" });
+  const { error } = loginValidation(req.body);
+  if (error) {
+    return res.status(400).send(error.details[0].message);
   }
-  // check if the User email exists in the database
-  await User.findOne({ email }).then((user) => {
-    if (!user) {
-      return res.json({ msg: "No user exists with this email" });
-    }
-    try {
-      // check the user password
-      bcrypt.compare(password, user.password, (err, check) => {
-        if (err) {
-          throw err;
-        }
-        // check if the password is correct
-        if (!check) {
-          return res
-            .status(400)
-            .json({ msg: "Incorrect Username or password" });
-        }
-        // send back user credentials
-        res.status(200).json({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-        });
-      });
-    } catch (err) {
-      res.status(400).send(err);
-    }
-  });
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.json({ msg: "Incorrect Username or password" });
+  }
+
+  try {
+    // check the user password
+    const validPass = await bcrypt.compare(password, user.password);
+    if (!validPass) return res.json({ msg: "Incorrect Username or password" });
+
+    // send back response
+    res.status(200).json({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 // route - POST /api/users
