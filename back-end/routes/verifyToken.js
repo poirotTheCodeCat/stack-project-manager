@@ -5,7 +5,7 @@
 const jwt = require("jsonwebtoken");
 
 // middleware function used to verify json web tokens submitted to the server
-function auth(req, res, next) {
+module.exports = function (req, res, next) {
   const token = req.header("auth-token"); // extract the jwt web token from request header
   if (!token) return res.status(401).send("Access Denied"); // make sure a token was submitted
 
@@ -16,4 +16,4 @@ function auth(req, res, next) {
   } catch (err) {
     res.status(400).send("Invalid Token");
   }
-}
+};
