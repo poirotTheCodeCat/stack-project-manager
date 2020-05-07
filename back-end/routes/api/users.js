@@ -75,15 +75,16 @@ router.post("/register", async (req, res) => {
       bcrypt.hash(newUser.password, salt, (err, hash) => {
         if (err) throw err;
         newUser.password = hash;
+        newUser.save().then(() => {
+          res.json({
+            user: {
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+            },
+          });
+        });
       });
-    });
-    await newUser.save();
-    res.json({
-      user: {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-      },
     });
   } catch (err) {
     res.status(400).send(err);
