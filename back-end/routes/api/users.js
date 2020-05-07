@@ -55,44 +55,39 @@ router.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body; // load the contents of the request body
 
   // Check for existing user
-  await User.findOne({ email }).then((user) => {
-    if (user) {
-      return res.status(400).json({ msg: "User already exists" });
-    }
+  const checkExist = await User.findOne({ email });
+  if (checkExist) {
+    return res.status(400).json({ msg: "User already exists" });
+  }
 
-    // create new user
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password,
-    });
-
-    try {
-      // Salt and hash the password
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) throw err;
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then((user) => {
-              res.json({
-                user: {
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email,
-                },
-              });
-            })
-            .catch(() => res.status(400).send(err));
-        });
-      });
-    } catch (err) {
-      res.status(400).send(err);
-    }
+  // create new user
+  const newUser = new User({
+    firstName,
+    lastName,
+    email,
+    password,
   });
+
+  try {
+    // Salt and hash the password
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) throw err;
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+      });
+    });
+    await newUser.save();
+    res.json({
+      user: {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+      },
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 module.exports = router;
