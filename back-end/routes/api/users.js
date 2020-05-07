@@ -1,3 +1,6 @@
+// File users.js
+// Description: This file contains the routes used to register a new account and login to an existing account
+
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
