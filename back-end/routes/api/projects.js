@@ -8,3 +8,9 @@ const router = express.Router();
 const User = require("../../models/Project");
 const { registerValidation, loginValidation } = require("../../validation");
 const verify = require("../verifyToken");
+
+router.get("/", verify, (req, res) => {
+  res.status(200).json({ msg: "Accessed projects", id: req.user._id });
+});
+
+module.exports = router;
