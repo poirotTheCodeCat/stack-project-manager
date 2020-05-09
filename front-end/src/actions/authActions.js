@@ -87,3 +87,30 @@ export const register = ({ firstName, lastName, email, password }) => (
       });
     });
 };
+
+// Function: login
+// Desc: attempts to log the user into their account
+export const login = ({ email, password }) => (dispatch) => {
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({ email, password });
+
+  axios
+    .get("/api/login", body, config)
+    .then((res) =>
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
+      );
+      dispatch({ type: LOGIN_FAIL });
+    });
+};
