@@ -52,3 +52,33 @@ export const tokenConfig = (getState) => {
 
   return config;
 };
+
+// register the user
+export const register = ({ firstName, lastName, email, password }) => (
+  dispatch
+) => {
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+
+  const body = JSON.stringify({ name, email, password });
+
+  axios
+    .post("/api/users", body, config)
+    .then((res) =>
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: res.data,
+      })
+    )
+    .catch((err) => {
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
+      );
+      dispatch({
+        type: REGISTER_FAIL,
+      });
+    });
+};
