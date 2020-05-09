@@ -17,6 +17,7 @@ class SignUpForm extends React.Component {
     msg: null,
   };
 
+  // add props to the component
   static propTypes = {
     isAuthenticated: PropTypes.bool,
     error: PropTypes.object.isRequired,

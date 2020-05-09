@@ -11,7 +11,8 @@ import {
   REGISTER_FAIL,
 } from "./types";
 
-// Check the token and load the user info
+// Function: loadUser
+// Desc: Check the token and load the user info
 export const loadUser = () => (dispatch, getState) => {
   // User is loading
   dispatch({ type: USER_LOADING });
@@ -26,6 +27,7 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
+      // dispatch the function to set state of error
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR,
@@ -53,7 +55,8 @@ export const tokenConfig = (getState) => {
   return config;
 };
 
-// register the user
+// Function: register
+// register the user on the server
 export const register = ({ firstName, lastName, email, password }) => (
   dispatch
 ) => {
@@ -63,8 +66,10 @@ export const register = ({ firstName, lastName, email, password }) => (
     },
   };
 
+  // assemble the body of the message about to be sent
   const body = JSON.stringify({ firstName, lastName, email, password });
 
+  // send the package - header and body - to the server
   axios
     .post("/api/users/register", body, config)
     .then((res) =>
