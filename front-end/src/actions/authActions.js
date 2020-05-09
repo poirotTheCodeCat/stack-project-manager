@@ -1,4 +1,5 @@
 import axios from "axios";
+import { returnErrors } from "./errorActions";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -15,6 +16,25 @@ export const loadUser = () => (dispatch, getState) => {
   // User is loading
   dispatch({ type: USER_LOADING });
 
+  // fetch user from server
+  axios
+    .get("/api/auth/user", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: AUTH_ERROR,
+      });
+    });
+};
+
+// setup config and token
+export const tokenConfig = (getState) => {
   // get token
   const token = getState().auth.token;
 
@@ -30,18 +50,5 @@ export const loadUser = () => (dispatch, getState) => {
     config.headers["auth-token"] = token; // put it in header to be sent to the server
   }
 
-  // fetch user from server
-  axios
-    .get("/api/auth/user", config)
-    .then((res) => {
-      dispatch({
-        type: USER_LOADED,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch({
-        type: AUTH_ERROR,
-      });
-    });
+  return config;
 };
