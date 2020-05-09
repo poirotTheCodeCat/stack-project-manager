@@ -114,3 +114,9 @@ export const login = ({ email, password }) => (dispatch) => {
       dispatch({ type: LOGIN_FAIL });
     });
 };
+
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT_SUCCESS,
+  });
+};
