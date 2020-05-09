@@ -6,7 +6,7 @@ function HomeNav() {
   return (
     <nav className="navbar navbar-expand-md navbar-light bg-light sticky-top">
       <div className="container-fluid">
-        <NavLink className="home-nav-links navbar-brand" to="/">
+        <NavLink className="home-nav-links navbar-brand" to="/Home">
           {" "}
           <h2 className="display-4">Stack</h2>{" "}
         </NavLink>

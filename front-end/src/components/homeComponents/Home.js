@@ -13,7 +13,7 @@ function Home() {
       <div>
         <HomeNav />
         <Switch>
-          <Route path="/" exact component={HomePage} />
+          <Route path="/Home" exact component={HomePage} />
           <Route path="/About" component={About} />
           <Route path="/Contact" component={Contact} />
           <Route path="/SignUp" component={SignUp} />
