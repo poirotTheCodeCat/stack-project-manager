@@ -1,15 +1,22 @@
 import React from "react";
 import "../../App.css";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { clearErrors } from "../../actions/errorActions";
 
 class LoginForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    };
-  }
+  state = {
+    email: "",
+    password: "",
+    msg: null,
+  };
+
+  // add props to the component
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+  };
+
   render() {
     return (
       <form className="form-container">
@@ -57,4 +64,10 @@ class LoginForm extends React.Component {
   }
 }
 
-export default LoginForm;
+// map the state to the props within this component - used to access state within the component
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+});
+
+export default connect(mapStateToProps, { clearErrors })(LoginForm);
