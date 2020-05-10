@@ -19,7 +19,7 @@ export const loadUser = () => (dispatch, getState) => {
 
   // fetch user from server
   axios
-    .get("/api/users/login", tokenConfig(getState))
+    .post("/api/users/login", tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: USER_LOADED,
@@ -43,13 +43,13 @@ export const tokenConfig = (getState) => {
   // The header
   const config = {
     headers: {
-      "Content-type": "application",
+      "Content-Type": "application",
     },
   };
 
   // check if the token exists
   if (token) {
-    config.headers["auth-token"] = token; // put it in header to be sent to the server
+    config.headers["token"] = token; // put it in header to be sent to the server
   }
 
   return config;
@@ -62,7 +62,7 @@ export const register = ({ firstName, lastName, email, password }) => (
 ) => {
   const config = {
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
     },
   };
 
@@ -93,17 +93,17 @@ export const register = ({ firstName, lastName, email, password }) => (
 export const login = ({ email, password }) => (dispatch) => {
   const config = {
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
     },
   };
 
   const body = JSON.stringify({ email, password });
 
   axios
-    .get("/api/login", body, config)
+    .post("/api/users/login", body, config)
     .then((res) =>
       dispatch({
-        type: REGISTER_SUCCESS,
+        type: LOGIN_SUCCESS,
         payload: res.data,
       })
     )

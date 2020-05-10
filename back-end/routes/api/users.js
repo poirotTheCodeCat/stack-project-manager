@@ -11,7 +11,7 @@ const { registerValidation, loginValidation } = require("../../validation");
 // route - GET /api/users
 // description - Retrieves user information
 // access TBD
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   // load recieved credentials into local variables
   const { email, password } = req.body;
 
@@ -33,14 +33,20 @@ router.get("/login", async (req, res) => {
 
     // create and assign json web token
     const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
-    res.header("auth-token", token);
 
     // send back response
-    res.status(200).json({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-    });
+    res
+      .header("token", token)
+      .status(200)
+      .json({
+        token,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
+      });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -74,7 +80,12 @@ router.post("/register", async (req, res) => {
 
   try {
     await newUser.save();
+    // create and assign json web token
+    const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
+    res.header("token", token);
+
     res.json({
+      token,
       user: {
         firstName: firstName,
         lastName: lastName,
