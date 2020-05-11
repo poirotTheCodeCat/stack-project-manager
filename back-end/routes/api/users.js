@@ -23,13 +23,14 @@ router.post("/login", async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.json({ msg: "Incorrect Username or password" });
+    return res.status(400).send("Incorrect Username or password");
   }
 
   try {
     // check the user password
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) return res.json({ msg: "Incorrect Username or password" });
+    if (!validPass)
+      return res.status(400).send("Incorrect Username or password");
 
     // create and assign json web token
     const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
@@ -64,7 +65,7 @@ router.post("/register", async (req, res) => {
   // Check for existing user
   const checkExist = await User.findOne({ email });
   if (checkExist) {
-    return res.status(400).json({ msg: "User already exists" });
+    return res.status(400).send("User already exists");
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -78,23 +79,25 @@ router.post("/register", async (req, res) => {
     password: hashedPass,
   });
 
-  try {
-    await newUser.save();
-    // create and assign json web token
-    const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
-    res.header("token", token);
+  await newUser
+    .save()
+    .then((user) => {
+      // create and assign json web token
+      const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
 
-    res.json({
-      token,
-      user: {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-      },
+      res.status(200).json({
+        token,
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        },
+      });
+    })
+    .catch((err) => {
+      res.status(400).send(err);
     });
-  } catch (err) {
-    res.status(400).send(err);
-  }
 });
 
 module.exports = router;

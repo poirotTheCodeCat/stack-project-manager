@@ -38,10 +38,6 @@ class SignUpForm extends React.Component {
       } else {
         this.setState({ msg: null });
       }
-
-      if (isAuthenticated) {
-        // switch to user page
-      }
     }
   }
 
@@ -53,13 +49,7 @@ class SignUpForm extends React.Component {
     e.preventDefault();
 
     // get register elements from the state
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      confirmPassword,
-    } = this.state;
+    const { firstName, lastName, email, password } = this.state;
 
     // create new user using the credentials that the user has provided
     const newUser = {
@@ -141,14 +131,6 @@ class SignUpForm extends React.Component {
           <label for="confirmPassword" className="sr-only">
             Confirm Password
           </label>
-          <input
-            type="password"
-            name="confirmPassword"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            className="form-control"
-            onChange={this.onChange}
-          />
         </div>
         <input
           type="submit"

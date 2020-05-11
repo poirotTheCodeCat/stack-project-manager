@@ -1,5 +1,5 @@
 import axios from "axios";
-import { returnErrors } from "./errorActions";
+import { returnErrors, clearErrors } from "./errorActions";
 import {
   USER_LOADED,
   USER_LOADING,
@@ -20,12 +20,12 @@ export const loadUser = () => (dispatch, getState) => {
   // fetch user from server
   axios
     .post("/api/users/login", tokenConfig(getState))
-    .then((res) => {
+    .then((res) =>
       dispatch({
         type: USER_LOADED,
         payload: res.data,
-      });
-    })
+      })
+    )
     .catch((err) => {
       // dispatch the function to set state of error
       dispatch(returnErrors(err.response.data, err.response.status));
@@ -72,12 +72,12 @@ export const register = ({ firstName, lastName, email, password }) => (
   // send the package - header and body - to the server
   axios
     .post("/api/users/register", body, config)
-    .then((res) =>
+    .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+    })
     .catch((err) => {
       dispatch(
         returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
