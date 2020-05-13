@@ -36,18 +36,15 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN);
 
     // send back response
-    res
-      .header("token", token)
-      .status(200)
-      .json({
-        token,
-        user: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-        },
-      });
+    res.status(200).json({
+      token,
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
   } catch (err) {
     res.status(400).send(err);
   }

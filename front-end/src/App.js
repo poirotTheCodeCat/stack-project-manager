@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { loadUser } from "./actions/authActions";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import User from "./components/userComponents/User";
 
 class App extends Component {
   componentDidMount() {
@@ -15,7 +16,8 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <Router>
-            <Route path="/" exact component={Home} />
+            <Route exact path="/User" component={User} />
+            <Route exact path="/" component={Home} />
           </Router>
         </div>
       </Provider>

@@ -33,6 +33,9 @@ class LoginForm extends React.Component {
         this.setState({ msg: null });
       }
     }
+
+    if (isAuthenticated) {
+    }
   }
 
   onChange = (e) => {
