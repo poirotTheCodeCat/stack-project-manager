@@ -4,3 +4,14 @@ Description: This file contains the requests related to the creation of a new ta
 */
 const express = require("express");
 const router = express.Router();
+const verify = require("../verifyToken");
+
+router.post("/new", verify, (req, res) => {
+  // get information from request
+  // create new Task to load into database
+  // verify info in req
+  // save the new task into database
+  res.status(200).send({ msg: "Successfully added new task" });
+});
+
+module.exports = router;

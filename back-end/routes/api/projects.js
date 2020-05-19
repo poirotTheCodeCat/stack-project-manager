@@ -39,7 +39,7 @@ router.post("/new", verify, async (req, res) => {
   const start = new Date(start_date);
   const end = new Date(end_date);
 
-  // validate all fields are filled out correctly - validate via @hapi/Joi
+  // validate all fields are filled out correctly - validate via @hapi/Joi TODO
 
   // create new project to insert into the database
   const newProject = new Project({
