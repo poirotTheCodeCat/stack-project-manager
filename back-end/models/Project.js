@@ -17,6 +17,16 @@ const projectSchema = new Schema({
     type: Boolean,
     default: false,
   },
+
+  start_date: {
+    type: Date,
+    default: Date.now(),
+  },
+
+  end_date: {
+    type: Date,
+    required: true,
+  },
 });
 
 module.exports = Project = mongoose.model("Project", projectSchema);
