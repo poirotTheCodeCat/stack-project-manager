@@ -1,3 +1,8 @@
+/*
+File: User.js 
+Description: This is the user landing page which is used to hold all user components being presented to the user
+*/
+
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
