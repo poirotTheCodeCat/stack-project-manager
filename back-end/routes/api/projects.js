@@ -21,7 +21,7 @@ router.get("/projects", verify, async (req, res) => {
 
   // find all projects where user_id === req_user_id
   try {
-    const user_projects = await Project.find({ user_id: _id });
+    const user_projects = await Project.find({ _user: _id });
 
     // respond with the list of projects
     res.status(200).json({ projects: user_projects });
@@ -43,7 +43,7 @@ router.post("/new", verify, async (req, res) => {
 
   // create new project to insert into the database
   const newProject = new Project({
-    user_id: _id,
+    _user: _id,
     start_date: start,
     end_date: end,
     title: project_name,
@@ -60,6 +60,12 @@ router.post("/new", verify, async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
+});
+
+router.delete("/project", verify, (req, res) => {
+  // get the project ID from the req
+  // remove all tasks associated with project ID
+  // remove the project
 });
 
 module.exports = router;
