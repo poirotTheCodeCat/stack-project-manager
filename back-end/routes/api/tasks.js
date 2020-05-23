@@ -17,7 +17,7 @@ router.post("/new", verify, (req, res) => {
 });
 
 router.get("/all", verify, (req, res) => {
-  // return all user tasks
+  // return tasks associated with specific user - use TaskTeam DB - search for user_id
 });
 
 module.exports = router;
