@@ -24,8 +24,10 @@ mongoose
 // initialize routes
 const users = require("./routes/api/users");
 const projects = require("./routes/api/projects");
+const tasks = require("./routes/api/tasks");
 
 server.use("/api/users", users); // set the users api route on the server
 server.use("/api/projects", projects); // set the projects api route on server
+server.use("/api/tasks", tasks); // set the tasks api route on server
 
 server.listen(port, () => console.log("Server is running on port " + port)); // start listening on port
