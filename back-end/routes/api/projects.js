@@ -6,6 +6,7 @@ const router = express.Router();
 const verify = require("../verifyToken");
 const jwt = require("jsonwebtoken");
 const Project = require("../../models/Project");
+const ProjectTeam = require("../../models/ProjectTeam");
 
 /*
 Description: This get request will return the projects associated with a given user if the user exists
@@ -21,10 +22,22 @@ router.get("/projects", verify, async (req, res) => {
 
   // find all projects where user_id === req_user_id
   try {
-    const user_projects = await Project.find({ _user: _id });
+    // find all Projects using ProjectTeam database
+    const user_projects = await ProjectTeam.find({ _user: _id });
+    var projects = [];
+
+    for (var i = 0; i < user_projects.length; i++) {
+      var proj = await Project.findOne({
+        _id: user_projects[i]._project,
+      }); // use the project id to find the project details
+
+      if (proj) {
+        projects.push(proj); // add the proj to the array
+      }
+    }
 
     // respond with the list of projects
-    res.status(200).json({ projects: user_projects });
+    res.status(200).json({ projects: projects });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -43,7 +56,7 @@ router.post("/new", verify, async (req, res) => {
 
   // create new project to insert into the database
   const newProject = new Project({
-    _user: _id,
+    owner: _id,
     start_date: start,
     end_date: end,
     title: project_name,
@@ -53,10 +66,17 @@ router.post("/new", verify, async (req, res) => {
 
   // insert new project into the database
   try {
-    await newProject.save().then((project) => {
-      // respond with the newly created project info
-      res.status(200).send({ msg: "Successfully created new Project" });
+    const project = await newProject.save(); // save the new project
+
+    // create initial team member to add to the DB
+    const creator = new ProjectTeam({
+      _user: _id,
+      _project: project._id,
     });
+
+    await creator.save(); // save the new team member
+
+    res.status(200).send({ newProject: project }); // send response
   } catch (err) {
     res.status(400).send(err);
   }
