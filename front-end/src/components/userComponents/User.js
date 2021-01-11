@@ -9,6 +9,7 @@ import Dashboard from "./Dashboard";
 import UserNav from "./UserNav";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import "./userStyles.css";
 
 class User extends React.Component {
   // set the props to be used

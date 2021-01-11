@@ -1,0 +1,14 @@
+/*
+File: userStyles.css 
+Description: this file contains unique styles for the components used on the user page
+*/
+UserNav {
+  height: 100%;
+  width: 300px;
+  background-color: #b3b3b3;
+  position: fixed;
+}
+
+User {
+  height: 100%;
+}

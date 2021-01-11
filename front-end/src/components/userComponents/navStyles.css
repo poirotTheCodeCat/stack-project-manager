@@ -1,0 +1,10 @@
+/*
+File: navStyles.css 
+Description: This file contains the styles for the navbar
+*/
+.userNavBar {
+  height: 100%;
+  width: 300px;
+  background-color: #bbbbbb;
+  position: fixed;
+}
